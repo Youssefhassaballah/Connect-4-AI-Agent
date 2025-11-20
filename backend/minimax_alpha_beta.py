@@ -70,10 +70,6 @@ class Connect4:
         return all(b[0][c] != 0 for c in range(self.cols))
 
     def terminal_check(self, board):
-        if self.count_connect4(board, 2) > 0:
-            return True, 1000000
-        if self.count_connect4(board, 1) > 0:
-            return True, -1000000
         if self.board_full(board):
             return True, 0
         return False, 0
@@ -263,6 +259,11 @@ if __name__ == "__main__":
     game.apply_move(3, 1)
     game.apply_move(2, 2)
     game.apply_move(4, 1)
+    game.apply_move(4, 1)
+    game.apply_move(4, 1)
+    game.apply_move(4, 1)
+    game.apply_move(4, 1)
+    game.apply_move(4, 1)
 
     print("Board before AI move:")
     for row in game.get_board():
@@ -277,12 +278,15 @@ if __name__ == "__main__":
     print("\n=== MINIMAX TREE ===")
     game.print_tree_console(tree, show_boards=False)
 
-    print("\nApplying AI move...")
-    game.apply_move(best_move, 2)
+    if best_move is not None:
+        print("\nApplying AI move...")
+        game.apply_move(best_move, 2)
 
-    print("\nBoard after AI move:")
-    for row in game.get_board():
-        print(row)
+        print("\nBoard after AI move:")
+        for row in game.get_board():
+            print(row)
+    else:
+        print("\nGame is already in a terminal state (board full). No move to apply.")
 
     game.save_tree_json(tree, "tree_output_alpha_beta.json")
     print("\nTree saved as tree_output_alpha_beta.json")
