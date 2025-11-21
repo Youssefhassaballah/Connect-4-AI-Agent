@@ -35,14 +35,15 @@ export const getAIMove = async (board, algorithm, depth) => {
         if (data.column === undefined || data.column === null) {
             throw new Error('Invalid response: missing column');
         }
-
+        console.log(data)
         return {
             column: data.column,
             tree: data.tree || null,
             evaluation: data.evaluation || null,
             stats: data.stats || null,
             nodesExpanded: data.nodesExpanded || 0,
-            timeTaken: data.timeTaken || 0
+            timeTaken: data.timeTaken || 0,
+            score: data.score 
         };
 
     } catch (error) {
@@ -64,5 +65,39 @@ export const testAPIConnection = async () => {
     } catch (error) {
         console.error('API connection test failed:', error);
         return false;
+    }
+};
+
+
+export const getScore = async (board) => {
+    try {
+        const response = await fetch(API_ENDPOINTS.SCORE, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                board: board
+            }),
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+
+        // Validate response
+        if (data.humanScore === undefined || data.aiScore === undefined) {
+            throw new Error('Invalid response: missing scores');
+        }
+
+        return {
+            human: data.humanScore,
+            ai: data.aiScore
+        };
+    } catch (error) {
+        console.error('Error getting score:', error);
+        throw new Error(`Failed to get score: ${error.message}`);
     }
 };
