@@ -123,6 +123,7 @@ export const useGameState = () => {
         makeMove,
         setAIMoveData,
         setProcessing,
-        setCurrentPlayer
+        setCurrentPlayer,
+        setScores
     };
 };

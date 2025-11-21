@@ -11,7 +11,7 @@ import TreeViewer from './components/TreeViewer/TreeViewer';
 import { useGameState } from './hooks/useGameState';
 
 // Services
-import { getAIMove } from './services/api/gameApi';
+import { getAIMove, getScore } from './services/api/gameApi';
 
 // Constants
 import { HUMAN, AI, GAME_STATUS, ALGORITHM_NAMES } from './utils/constants';
@@ -39,7 +39,8 @@ function App() {
     makeMove,
     setAIMoveData,
     setProcessing,
-    setCurrentPlayer
+    setCurrentPlayer,
+    setScores
   } = useGameState();
 
   /**
@@ -78,7 +79,7 @@ function App() {
    */
   const makeAIMove = useCallback(async () => {
     if (!settings) return;
-    
+
     setProcessing(true);
 
     try {
@@ -87,9 +88,15 @@ function App() {
         settings.algorithm,
         settings.depth
       );
+      console.log("aaaaa", moveData)
 
       // Store tree and stats
       setAIMoveData(moveData);
+      const score = {
+        'human': moveData.score[0],
+        "ai": moveData.score[1]
+      }
+      setScores(score)
 
       // Make the move
       setTimeout(() => {
@@ -128,6 +135,20 @@ function App() {
     return <GameSettings onStartGame={handleStartGame} />;
   }
 
+
+  const fetchScores = async () => {
+    if (!board) return;
+    try {
+      const scoreData = await getScore(board);
+      // Update scores in state
+      setScores(scoreData);
+    } catch (error) {
+      console.error('Error fetching scores:', error);
+    }
+  };
+
+
+
   // Main game screen
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-900 via-purple-900 to-indigo-900 p-4">
@@ -138,7 +159,7 @@ function App() {
             <div>
               <h1 className="text-3xl font-bold text-gray-800">Connect 4 AI Game</h1>
               <p className="text-sm text-gray-600 mt-1">
-                Algorithm: <span className="font-semibold">{ALGORITHM_NAMES[settings.algorithm]}</span> | 
+                Algorithm: <span className="font-semibold">{ALGORITHM_NAMES[settings.algorithm]}</span> |
                 Depth: <span className="font-semibold">{settings.depth}</span>
               </p>
             </div>
