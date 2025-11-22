@@ -90,15 +90,24 @@ class ExpectiminiMaxAlgorithm:
         if board.is_valid_column(chosen_col):
             outcomes.append((chosen_col, 0.6))
         
-        # Left adjacent: 20% chance
-        left_col = chosen_col - 1
-        if left_col >= 0 and board.is_valid_column(left_col):
-            outcomes.append((left_col, 0.2))
         
-        # Right adjacent: 20% chance
-        right_col = chosen_col + 1
-        if right_col < COLS and board.is_valid_column(right_col):
-            outcomes.append((right_col, 0.2))
+        if(not(chosen_col != 0  and board.is_valid_column(chosen_col - 1 ) )or not  ( chosen_col != 6 and board.is_valid_column(chosen_col+1))):
+            if chosen_col != 6 and board.is_valid_column(chosen_col + 1 ):
+                outcomes.append((chosen_col + 1, 0.4))
+                print("Chosen left column is not valid, but right column is valid")
+            else:
+                outcomes.append((chosen_col - 1, 0.4))
+            
+        # Left adjacent: 20% chance
+        else:
+            left_col = chosen_col - 1
+            if left_col >= 0 and board.is_valid_column(left_col):
+                outcomes.append((left_col, 0.2))
+
+            # Right adjacent: 20% chance
+            right_col = chosen_col + 1
+            if right_col < COLS and board.is_valid_column(right_col):
+                outcomes.append((right_col, 0.2))
         
         # If no valid outcomes, return evaluation
         if not outcomes:
@@ -111,8 +120,8 @@ class ExpectiminiMaxAlgorithm:
             }
         
         # Normalize probabilities if some adjacent columns were invalid
-        total_prob = sum(prob for _, prob in outcomes)
-        outcomes = [(col, prob / total_prob) for col, prob in outcomes]
+        # total_prob = sum(prob for _, prob in outcomes)
+        # outcomes = [(col, prob / total_prob) for col, prob in outcomes]
         
         # Calculate expected value
         expected_value = 0
