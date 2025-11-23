@@ -107,8 +107,8 @@ const TreeNode = ({ node, depth = 0, index = 0, isLast = false, parentLines = []
                             {/* Alpha-Beta values */}
                             {node.alpha !== undefined && node.beta !== undefined && (
                                 <div className="text-xs font-mono space-x-3">
-                                    <span>α: <strong>{node.alpha === -Infinity ? '-∞' : node.alpha === Infinity ? '∞' : node.alpha}</strong></span>
-                                    <span>β: <strong>{node.beta === -Infinity ? '-∞' : node.beta === Infinity ? '∞' : node.beta}</strong></span>
+                                    <span>α: <strong>{node.alpha === -1000000000000 ? '-∞' : node.alpha === 1000000000000 ? '∞' : node.alpha}</strong></span>
+                                    <span>β: <strong>{node.beta === -1000000000000 ? '-∞' : node.beta === 1000000000000 ? '∞' : node.beta}</strong></span>
                                 </div>
                             )}
 
@@ -126,6 +126,19 @@ const TreeNode = ({ node, depth = 0, index = 0, isLast = false, parentLines = []
                                     Depth: {node.depth}
                                 </div>
                             )}
+
+                            {/* Board state */}
+                            {node.board && (
+                                <div className="mt-2 w-full">
+                                    <div className="text-xs font-semibold text-gray-700 mb-1">Board:</div>
+                                    <div className="text-xs font-mono whitespace-pre bg-white p-2 rounded border border-gray-300 overflow-x-auto leading-none">
+                                        {node.board.split('\n').map((row, i) => (
+                                            <div key={i}>{row}</div>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+
                         </div>
 
                         {/* Children count badge */}
@@ -142,6 +155,8 @@ const TreeNode = ({ node, depth = 0, index = 0, isLast = false, parentLines = []
             {hasChildren && isOpen && (
                 <div className="ml-6">
                     {node.children.map((child, idx) => (
+                        console.log("child", child),
+
                         <TreeNode
                             key={`node-${depth}-${idx}`}
                             node={child}
@@ -275,8 +290,8 @@ const TreeViewer = ({ treeData }) => {
 
                                 {node.alpha !== undefined && node.beta !== undefined && (
                                     <div className="text-xs font-mono space-x-3">
-                                        <span>α: <strong>{node.alpha === -Infinity ? '-∞' : node.alpha === Infinity ? '∞' : node.alpha}</strong></span>
-                                        <span>β: <strong>{node.beta === -Infinity ? '-∞' : node.beta === Infinity ? '∞' : node.beta}</strong></span>
+                                        <span>α: <strong>{node.alpha === -1000000000000 ? '-∞' : node.alpha === 1000000000000 ? '∞' : node.alpha}</strong></span>
+                                        <span>β: <strong>{node.beta === -1000000000000 ? '-∞' : node.beta === 1000000000000 ? '∞' : node.beta}</strong></span>
                                     </div>
                                 )}
 
@@ -292,6 +307,18 @@ const TreeViewer = ({ treeData }) => {
                                         Depth: {node.depth}
                                     </div>
                                 )}
+                                {/* Board state */}
+                                {node.board && (
+                                    <div className="mt-2 w-full">
+                                        <div className="text-xs font-semibold text-gray-700 mb-1">Board:</div>
+                                        <div className="text-xs font-mono whitespace-pre bg-white p-2 rounded border border-gray-300 overflow-x-auto leading-none">
+                                            {node.board.split('\n').map((row, i) => (
+                                                <div key={i}>{row}</div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                )}
+
                             </div>
 
                             {hasChildren && (
