@@ -132,6 +132,9 @@ def print_tree(node, indent=0):
     # Print if pruned
     if node.get('pruned'):
         print(" [PRUNED]", end='')
+        
+    if 'board' in node:
+        print(f"\n{prefix}Board State:\n{prefix}{node['board'].replace('\n', '\n'+prefix)}", end='')
     
     print()
     

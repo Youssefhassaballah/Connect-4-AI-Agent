@@ -48,6 +48,12 @@ class Board:
         """Check if the board is completely full"""
         return not any(self.board[0][col] == EMPTY for col in range(COLS))
     
+    def string_representation(self):
+        string_rows = []        
+        for row in self.board:
+            string_rows.append(''.join(str(cell) for cell in row))
+        return '\n'.join(string_rows)
+    
     def check_winner(self):
         """
         Check for connect-4s and return counts for each player

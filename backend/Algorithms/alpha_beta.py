@@ -85,6 +85,7 @@ class AlphaBetaAlgorithm:
                 'depth': self.depth_limit - depth,
                 'alpha': alpha,
                 'beta': beta,
+                'board': board.string_representation(),
                 'children': []
             }
         
@@ -125,7 +126,8 @@ class AlphaBetaAlgorithm:
                 'depth': self.depth_limit - depth,
                 'alpha': alpha,
                 'beta': beta,
-                'children': children_trees
+                'children': children_trees,
+                'board': temp_board.string_representation(),
                 }
             
             return max_value, {
@@ -134,7 +136,8 @@ class AlphaBetaAlgorithm:
                 'depth': self.depth_limit - depth,
                 'alpha': alpha,
                 'beta': beta,
-                'children': children_trees
+                'children': children_trees,
+                'board': temp_board.string_representation(),
             }
         
         else:
@@ -152,6 +155,7 @@ class AlphaBetaAlgorithm:
                 node = {
                     'column': col,
                     'value': value,
+                    'board': temp_board.string_representation(),
                     'type': 'min',
                     'depth': self.depth_limit - depth,
                     'alpha': alpha,
@@ -172,7 +176,8 @@ class AlphaBetaAlgorithm:
                 'depth': self.depth_limit - depth,
                 'alpha': alpha,
                 'beta': beta,
-                'children': children_trees
+                'children': children_trees,
+                'board': temp_board.string_representation(),
                 }
             
             return min_value, {
@@ -181,5 +186,6 @@ class AlphaBetaAlgorithm:
                 'depth': self.depth_limit - depth,
                 'alpha': alpha,
                 'beta': beta,
-                'children': children_trees
+                'children': children_trees,
+                'board': temp_board.string_representation(),
             }

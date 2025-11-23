@@ -138,6 +138,7 @@ class MinimaxAlgorithm:
                     'column': col,
                     'value': value,
                     'type': 'min',
+                    'board': temp_board.string_representation(),
                     'depth': self.depth_limit - depth,
                     'children': [child_tree] if child_tree else []
                 }

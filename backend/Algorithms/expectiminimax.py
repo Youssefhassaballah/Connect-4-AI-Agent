@@ -63,14 +63,6 @@ class ExpectiminiMaxAlgorithm:
         return best_col, tree, stats
     
     def expectiminimax_chance(self, board, chosen_col, depth, is_maximizing):
-        """
-        Handle the chance node - disc might fall in adjacent columns
-        
-        Probability distribution:
-        - 60% (0.6): Falls in chosen column
-        - 20% (0.2): Falls in left adjacent column (if valid)
-        - 20% (0.2): Falls in right adjacent column (if valid)
-        """
         self.nodes_expanded += 1
         
         if depth == 0 or board.is_terminal():
@@ -87,28 +79,28 @@ class ExpectiminiMaxAlgorithm:
         player = AI if is_maximizing else HUMAN
         
         # Primary outcome: 60% chance of chosen column
+        # Primary 60% chance
         if board.is_valid_column(chosen_col):
             outcomes.append((chosen_col, 0.6))
-        
-        
-        if(not(chosen_col != 0  and board.is_valid_column(chosen_col - 1 ) )or not  ( chosen_col != 6 and board.is_valid_column(chosen_col+1))):
-            if chosen_col != 6 and board.is_valid_column(chosen_col + 1 ):
-                outcomes.append((chosen_col + 1, 0.4))
-                print("Chosen left column is not valid, but right column is valid")
-            else:
-                outcomes.append((chosen_col - 1, 0.4))
-            
-        # Left adjacent: 20% chance
-        else:
-            left_col = chosen_col - 1
-            if left_col >= 0 and board.is_valid_column(left_col):
-                outcomes.append((left_col, 0.2))
 
-            # Right adjacent: 20% chance
-            right_col = chosen_col + 1
-            if right_col < COLS and board.is_valid_column(right_col):
-                outcomes.append((right_col, 0.2))
+
+        left_valid = chosen_col - 1 >= 0 and board.is_valid_column(chosen_col - 1)
+        right_valid = chosen_col + 1 < COLS and board.is_valid_column(chosen_col + 1)
+
         
+        if left_valid and right_valid:
+            outcomes.append((chosen_col - 1, 0.2))
+            outcomes.append((chosen_col + 1, 0.2))
+
+        elif left_valid:
+            outcomes.append((chosen_col - 1, 0.4))
+
+        
+        elif right_valid:
+            outcomes.append((chosen_col + 1, 0.4))
+
+
+
         # If no valid outcomes, return evaluation
         if not outcomes:
             eval_value = evaluate_board(board)
@@ -119,11 +111,7 @@ class ExpectiminiMaxAlgorithm:
                 'children': []
             }
         
-        # Normalize probabilities if some adjacent columns were invalid
-        # total_prob = sum(prob for _, prob in outcomes)
-        # outcomes = [(col, prob / total_prob) for col, prob in outcomes]
-        
-        # Calculate expected value
+      
         expected_value = 0
         outcome_trees = []
         
@@ -138,6 +126,7 @@ class ExpectiminiMaxAlgorithm:
                 'column': actual_col,
                 'probability': probability,
                 'value': value,
+                'board': temp_board.string_representation(),
                 'type': 'chance',
                 'depth': self.depth_limit - depth,
                 'children': [child_tree] if child_tree else []
