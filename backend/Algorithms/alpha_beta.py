@@ -74,19 +74,6 @@ class AlphaBetaAlgorithm:
         return best_col, tree, stats
     
     def alpha_beta(self, board, depth, alpha, beta, is_maximizing):
-        """
-        Alpha-Beta pruning recursive function
-        
-        Args:
-            board: Current board state
-            depth: Remaining depth to search
-            alpha: Best value for maximizer
-            beta: Best value for minimizer
-            is_maximizing: True if maximizing player (AI), False if minimizing (Human)
-        
-        Returns:
-            (value, tree_node)
-        """
         self.nodes_expanded += 1
         
         # Terminal conditions
@@ -132,7 +119,14 @@ class AlphaBetaAlgorithm:
                 # Beta cutoff (pruning)
                 if beta <= alpha:
                     node['pruned'] = True
-                    break
+                    return max_value, {
+                'value': max_value,
+                'type': 'max',
+                'depth': self.depth_limit - depth,
+                'alpha': alpha,
+                'beta': beta,
+                'children': children_trees
+                }
             
             return max_value, {
                 'value': max_value,
@@ -172,7 +166,14 @@ class AlphaBetaAlgorithm:
                 # Alpha cutoff (pruning)
                 if beta <= alpha:
                     node['pruned'] = True
-                    break
+                    return min_value, {
+                'value': min_value,
+                'type': 'min',
+                'depth': self.depth_limit - depth,
+                'alpha': alpha,
+                'beta': beta,
+                'children': children_trees
+                }
             
             return min_value, {
                 'value': min_value,
