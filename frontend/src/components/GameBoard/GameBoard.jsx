@@ -43,7 +43,7 @@ const GameBoard = ({ board, onColumnClick, currentPlayer, isProcessing, gameStat
             `}
                         onClick={() => handleCellClick(colIndex)}
                     >
-                        {colIndex + 1}
+                        {colIndex}
                     </div>
                 ))}
             </div>
